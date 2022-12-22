@@ -310,7 +310,7 @@ static int dtimg_get_fdt(int argc, char * const argv[], enum cmd_dtimg_info cmd)
 			return CMD_RET_USAGE;
 		break;
 	case CMD_DTIMG_LOAD:
-		if (argc != 6 && argc != 7)
+		if (argc != 5 && argc != 6)
 			return CMD_RET_USAGE;
 		break;
 	default:
@@ -334,10 +334,10 @@ static int dtimg_get_fdt(int argc, char * const argv[], enum cmd_dtimg_info cmd)
 		return CMD_RET_FAILURE;
 	}
 
-	if (cmd <= CMD_DTIMG_SIZE && argc == 6) {
+	if (cmd <= CMD_DTIMG_SIZE && argc == 5) {
+		id = argv[4];
+	} else if (cmd == CMD_DTIMG_LOAD && argc == 6) {
 		id = argv[5];
-	} else if (cmd == CMD_DTIMG_LOAD && argc == 7) {
-		id = argv[6];
 	}
 
 	if (!dt_get_fdt_blob(hdr_addr, index, id, &fdt_addr, &fdt_size))
@@ -392,9 +392,9 @@ static int do_dtimg_load(cmd_tbl_t *cmdtp, int flag, int argc,
 
 static cmd_tbl_t cmd_dtimg_sub[] = {
 	U_BOOT_CMD_MKENT(dump, 2, 0, do_dtimg_dump, "", ""),
-	U_BOOT_CMD_MKENT(start, 4, 0, do_dtimg_start, "", ""),
-	U_BOOT_CMD_MKENT(size, 4, 0, do_dtimg_size, "", ""),
-	U_BOOT_CMD_MKENT(load, 5, 0, do_dtimg_load, "", ""),
+	U_BOOT_CMD_MKENT(start, 5, 0, do_dtimg_start, "", ""),
+	U_BOOT_CMD_MKENT(size, 5, 0, do_dtimg_size, "", ""),
+	U_BOOT_CMD_MKENT(load, 6, 0, do_dtimg_load, "", ""),
 };
 
 static int do_dtimg(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
@@ -422,19 +422,19 @@ U_BOOT_CMD(
 	"    - parse specified image and print its structure info\n"
 	"      <addr>: image address in RAM, in hex\n"
 	"dtimg start <addr> <index> <varname> [<id>]\n"
-	"    - get address (hex) of FDT in the image, by index\n"
+	"    - get address (hex) of FDT in the image, by index or by id\n"
 	"      <addr>: image address in RAM, in hex\n"
 	"      <index>: index of desired FDT in the image\n"
 	"      <varname>: name of variable where to store address of FDT\n"
 	"      [<id>]: id of desired FDT (optional)"
 	"dtimg size <addr> <index> <varname> [<id>]\n"
-	"    - get size (hex, bytes) of FDT in the image, by index\n"
+	"    - get size (hex, bytes) of FDT in the image, by index or by id\n"
 	"      <addr>: image address in RAM, in hex\n"
 	"      <index>: index of desired FDT in the image\n"
 	"      <varname>: name of variable where to store size of FDT\n"
 	"      [<id>]: id of desired FDT (optional)"
 	"dtimg load <addr> <index> <addr_new> <varname> [<id>]\n"
-	"    - get size (hex, bytes) of FDT in the image, by index\n"
+	"    - load and get size (hex, bytes) of FDT in the image, by index or by id\n"
 	"      <addr>: image address in RAM, in hex\n"
 	"      <index>: index of desired FDT in the image\n"
 	"      <addr_new>: address to load FDT\n"
