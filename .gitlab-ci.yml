@@ -9,7 +9,7 @@ build:
     - export CROSS_COMPILE=aarch64-linux-gnu- && export ARCH=arm64
     - make nintendo-switch_defconfig
     - make -j$(nproc)
+    - cp u-boot.bin bl33.bin
   artifacts:
     paths:
-      - u-boot.elf
-
+      - bl33.bin
